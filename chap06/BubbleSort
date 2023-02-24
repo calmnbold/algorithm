@@ -1,0 +1,91 @@
+package chap06;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class BubbleSort {
+  // 3가지 버전으로 버블정렬하기
+  
+	// a[idx1]과 a[idx2]의 자리바꾸는 메소드
+	static void swap(int[] a, int idx1, int idx2) {
+		int temp = a[idx1];
+		a[idx1] = a[idx2];
+		a[idx2] = temp;
+	}
+	//버블정렬(버전1) - 기본형
+	static void bubbleSort(int[] a, int num) {
+		for(int i=0; i<num-1; i++) {
+			//맨뒤랑 맨뒤-1이랑 대소비교 후 자리교환하기 
+			for(int j=num-1; j>i; j--) {
+				if(a[j]<a[j-1]) {
+					swap(a, j-1, j);
+				}
+			}
+		}
+	}
+	//버블정렬(버전2) : 최적화1 - 더이상 정렬할 것 없을때 패스(비교+교환의 한 사이클) 종료
+	static void bubbleSort2(int[] a, int num) {
+		for(int i=0; i<num-1; i++) {
+			
+			int exchg = 0;// 교환횟수 구하는 변수 생성
+			for(int j=num-1; j>i; j--) {
+				if(a[j]<a[j-1]) {
+					swap(a, j-1, j);
+					exchg++; //교환할때마다 ++
+				}
+			}
+			// 자리교환하는 반복문 끝나는 지점
+			// 더이상 교환할 것 없으면 패스 종료
+			if(exchg==0) break; //바깥 for문(=패스반복) 종료
+		}
+	}
+	//버블정렬(버전3) - 최적화2 : 맨앞쪽부터 정렬이 끝난부분은 다음 패스과정에 포함하지 않는다.
+	static void bubbleSort3(int[] a, int num) {
+		int k = 0;
+		while(k<num-1) {
+			
+			int last = num-1; //마지막으로 요소를 교환한 위치
+			
+			for(int j=num-1; j>k; j--) {
+				if(a[j]<a[j-1]) {
+					swap(a, j-1, j);
+					last = j; //교환한 경우 교환한 오른쪽인덱스를 last에 저장
+				}
+			}
+			////last를 k에 담아서 다음 패스의 범위를 제한한다.
+			k = last;
+		}
+	}
+	
+	public static void main(String[] args) {
+	
+		Scanner scan = new Scanner(System.in);
+		System.out.println("버블정렬(버전1)");
+		
+		//요소수 값 입력 
+		System.out.print("요소수:");
+		int n = scan.nextInt();
+		int x[] = new int[n];
+		
+		//x배열에 입력값 담기
+		for(int i=0; i<x.length; i++) {
+			System.out.print("x["+i+"]:");
+			x[i] = scan.nextInt();
+		}
+			
+		bubbleSort(x, n);
+
+		System.out.println("오름차순으로 정렬했습니다.(버블정렬 버전1)");
+		for(int i=0; i<n; i++) {
+			System.out.println("x["+i+"] = "+x[i]);
+		}
+		
+		System.out.println("===================");
+		bubbleSort2(x,n);
+		System.out.println("버전2: "+Arrays.toString(x));
+		
+		bubbleSort3(x,n);
+		System.out.println("버전3: "+Arrays.toString(x));
+	}
+
+}
